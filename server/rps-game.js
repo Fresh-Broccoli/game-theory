@@ -2,6 +2,7 @@
 class RpsGame {
 
   constructor(p1, p2) {
+    //comment
     this._players = [p1, p2];
     this._scores = [0, 0];
     this._turns = [null, null];
