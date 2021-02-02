@@ -21,7 +21,10 @@ let waitingPlayer = null;
 //var players = [];
 
 io.on('connection', (sock) => {
-  
+
+  const _id = sock.id
+  console.log('Socket Connected: ' + _id)
+
   if (waitingPlayer) {
     new RpsGame(waitingPlayer, sock);
     waitingPlayer = null;
@@ -29,6 +32,11 @@ io.on('connection', (sock) => {
     waitingPlayer = sock;
     waitingPlayer.emit('message', 'Waiting for an opponent');
   }
+  
+  sock.on('disconnect', () => {
+    io.emit('myCustomEvent', {customEvent: 'Custom Message'})
+    console.log('Socket disconnected: ' + _id)
+  })
 
   sock.on('message', (text) => {
     io.emit('message', text);
