@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RPS</title>
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body onload="create();">
+    <div class="rps-wrapper">
+      <ul id="events"></ul>
+      <div class="controls">
+        <div class="chat-wrapper">
+          <form id="chat-form">
+          </form>
+        </div>
+        <div class="button-wrapper">
+          <button id="betray" class="turn">Betray</button>
+          <button id="cooperate" class="turn">Cooperate</button>
+        </div>
+    </div>
+    <button id="myButton" class="float-left submit-button" >Home</button>
+    <script type="text/javascript">
+      document.getElementById("myButton").onclick = function () {
+          location.href = "/index.html?"
+      };
+  </script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="src/client.js"></script>
+  </body>
+</html>

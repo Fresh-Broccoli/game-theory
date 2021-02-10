@@ -1,8 +1,9 @@
 
 class RpsGame {
 
-  constructor(p1, p2) {
+  constructor(p1, p2, n1, n2) {
     //comment
+    this._names = [n1,n2];
     this._players = [p1, p2];
     this._scores = [0, 0];
     this._turns = [null, null];
@@ -86,8 +87,8 @@ class RpsGame {
         break;
     }
     this._sendToPlayers('Scores:');
-    this._sendToPlayers(`Player 1: ${this._scores[0]}`);
-    this._sendToPlayers(`Player 2: ${this._scores[1]}`);
+    this._sendToPlayers(this._names[0] + `: ${this._scores[0]}`);
+    this._sendToPlayers(this._names[1] + `: ${this._scores[1]}`);
   }
 
   _sendWinMessage(winner, loser) {
