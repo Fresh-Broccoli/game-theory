@@ -5,6 +5,7 @@ class RpsGame {
     //comment
     this._names = players.map(p => p.name);
     this._players = players.map(p=> p.it);
+    this._games = this._combination(this._range(0, this._names.length));
     this._scores = Array.apply(null, new Array(players.length)).map(_ =>0);
     this._turns = Array.apply(null, new Array(players.length)).map(_ => null);
     this._turn = 1;
@@ -16,6 +17,24 @@ class RpsGame {
       });
     });
   }
+  // Copied from https://stackoverflow.com/questions/3895478/does-javascript-have-a-method-like-range-to-generate-a-range-within-the-supp
+  _range (start, end) {
+    return new Array(end - start).fill().map((d, i) => i + start);
+  }
+
+  // Takes in a list and returns all available combinations (pairs only).
+  _combination(list){
+    var out = [];
+    for(var i=0;i<list.length;i++){
+      for(var j=i+1;j<list.length;j++){
+        //console.log(i)
+        //console.log(j)
+        out.push([list[i],list[j]]);
+      }
+    }
+  return out      
+  }
+  
 
   _sendToPlayer(playerIndex, msg) {
     this._players[playerIndex].emit('message', msg);
@@ -38,10 +57,10 @@ class RpsGame {
   _checkGameOver() {
     const turns = this._turns;
 
-    if (turns[0] && turns[1]) {
+    if (this._turns.every((x)=>x)) {
       //this._sendToPlayers('Game over ' + turns.join(' : '));
       this._getGameResult();
-      this._turns = [null, null];
+      this._turns = Array.apply(null, new Array(this._players.length)).map(_ => null);
       this._turn ++;
       this._sendToPlayers(`Turn ${this._turn}: Make your choice!`);
       
@@ -49,49 +68,59 @@ class RpsGame {
   }
 
   _getGameResult() {
-
-    const p0 = this._decodeTurn(this._turns[0]);
-    const p1 = this._decodeTurn(this._turns[1]);
-
+    // Gets all choices from all players.
+    const choices = this._turns.map(this._decodeTurn);
+    //const combChoices = this._combination(choices);
     /*
     Returns the updated score board.
     :params:
-    one: The number used to determine how much to increase/decrease Player 1's score.
-    two: The number used to determine how much to increase/decrease Player 2's score.
+    one: Index of the first player.
+    two: Index of the second player.
+    ones: The number used to determine how much to increase/decrease Player 1's score.
+    twos: The number used to determine how much to increase/decrease Player 2's score.
     */
-    const updatedScore = (one, two) => [this._scores[0] + one, this._scores[1] + two]
-
-    // 0 = betray
-    // 1 = cooperate
-    const distance = p1 + p0;
+    const updatedScore = (one, ones, two, twos) => [this._scores[one]+ones, this._scores[two] + twos];
   
-    switch (distance) {
-      case 0:
-        this._sendToPlayers('Both Players have betrayed each other!');
-        this._scores = updatedScore(-1, -1);
-        break;
+    //Copied from https://stackoverflow.com/questions/22015684/how-do-i-zip-two-arrays-in-javascript
+    const zip = (a, b) => a.map((k, i) => [k, b[i]]);
+    // p0: Index of the first player.
+    // p1: Index of the second player.
+    const updateScore = (o, t) => {
+      // 0 = betray
+      // 1 = cooperate
+      p0 = choices[o];
+      p1 = choices[t];
+      const distance = p1 + p0;
+    
+      switch (distance) {
+        case 0:
+          this._sendToPlayers('Both Players have betrayed each other!');
+          this._scores = updatedScore(o, -1, t, -1);
+          break;
 
-      case 1:
-        if(p0 == 0){
-          this._sendWinMessage(this._players[0], this._players[1])
-          this._scores = updatedScore(3, -2);
-        }  
-        else{
-          this._sendWinMessage(this._players[1], this._players[0])
-          this._scores = updatedScore(-2, 3);
-        }
-        break;
+        case 1:
+          if(p0 == 0){
+            this._sendWinMessage(this._players[0], this._players[1])
+            this._scores = updatedScore(o, 3, t, -2);
+          }  
+          else{
+            this._sendWinMessage(this._players[1], this._players[0])
+            this._scores = updatedScore(o, -2, t, 3);
+          }
+          break;
 
-      case 2:
-        this._sendToPlayers('Both Players have cooperated!');
-        this._scores = updatedScore(2,2);
-        break;
-    }
+        case 2:
+          this._sendToPlayers('Both Players have cooperated!');
+          this._scores = updatedScore(o, 2, t, 2);
+          break;
+      }
+    combChoices.forEach((x)=> updateScore(x[0], x[1]));
     this._sendToPlayers('Scores:');
+    //zip(this._names, this._scores).forEach((x) => this._sendToPlayers(x[0]+ `: ${x[1]}`));
     this._sendToPlayers(this._names[0] + `: ${this._scores[0]}`);
     this._sendToPlayers(this._names[1] + `: ${this._scores[1]}`);
   }
-
+  }
   _sendWinMessage(winner, loser) {
     winner.emit('message', 'Betrayal Successful!');
     loser.emit('message', 'Cooperation Failed.');
