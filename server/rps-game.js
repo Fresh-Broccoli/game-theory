@@ -27,8 +27,6 @@ class RpsGame {
     var out = [];
     for(var i=0;i<list.length;i++){
       for(var j=i+1;j<list.length;j++){
-        //console.log(i)
-        //console.log(j)
         out.push([list[i],list[j]]);
       }
     }
@@ -59,6 +57,7 @@ class RpsGame {
 
     if (this._turns.every((x)=>x)) {
       //this._sendToPlayers('Game over ' + turns.join(' : '));
+      
       this._getGameResult();
       this._turns = Array.apply(null, new Array(this._players.length)).map(_ => null);
       this._turn ++;
@@ -79,17 +78,19 @@ class RpsGame {
     ones: The number used to determine how much to increase/decrease Player 1's score.
     twos: The number used to determine how much to increase/decrease Player 2's score.
     */
+
     const updatedScore = (one, ones, two, twos) => [this._scores[one]+ones, this._scores[two] + twos];
   
     //Copied from https://stackoverflow.com/questions/22015684/how-do-i-zip-two-arrays-in-javascript
     const zip = (a, b) => a.map((k, i) => [k, b[i]]);
+
     // p0: Index of the first player.
     // p1: Index of the second player.
     const updateScore = (o, t) => {
       // 0 = betray
       // 1 = cooperate
-      p0 = choices[o];
-      p1 = choices[t];
+      const p0 = choices[o];
+      const p1 = choices[t];
       const distance = p1 + p0;
     
       switch (distance) {
@@ -114,13 +115,16 @@ class RpsGame {
           this._scores = updatedScore(o, 2, t, 2);
           break;
       }
-    combChoices.forEach((x)=> updateScore(x[0], x[1]));
+    }
+
+    this._games.forEach((x)=> updateScore(x[0], x[1]));
     this._sendToPlayers('Scores:');
-    //zip(this._names, this._scores).forEach((x) => this._sendToPlayers(x[0]+ `: ${x[1]}`));
-    this._sendToPlayers(this._names[0] + `: ${this._scores[0]}`);
-    this._sendToPlayers(this._names[1] + `: ${this._scores[1]}`);
-  }
-  }
+    zip(this._names, this._scores).forEach((x) => this._sendToPlayers(x[0]+ `: ${x[1]}`));
+    //this._sendToPlayers(this._names[0] + `: ${this._scores[0]}`);
+    //this._sendToPlayers(this._names[1] + `: ${this._scores[1]}`);
+    }
+  
+
   _sendWinMessage(winner, loser) {
     winner.emit('message', 'Betrayal Successful!');
     loser.emit('message', 'Cooperation Failed.');
@@ -136,8 +140,8 @@ class RpsGame {
         throw new Error(`Could not decode turn ${turn}`);
     }
   }
-
-
 }
+
+
 
 module.exports = RpsGame;
