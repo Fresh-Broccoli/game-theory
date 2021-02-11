@@ -1,5 +1,21 @@
 
+const bet = document.getElementById('betray');
+const coo = document.getElementById('cooperate');
+const defColor = "white";
 
+const click = (button) => {
+  //console.log("Clicked on " + button.id);
+  button.style.backgroundColor = 'green';
+  button.disabled = true;
+}; 
+
+const unclick = (button) => {
+  //console.log("Unclicked " + button.id)
+  button.style.backgroundColor = defColor
+  button.disabled = false;
+  //button.style.backgroundColor = defColor;
+  
+};
 
 const writeEvent = (text) => {
   // <ul> element
@@ -36,27 +52,33 @@ const onIDSubmitted = (e) => {
 
 const disconnected = () => {
   writeEvent('Opponent Disconnected')
-}
-
+};
+// To be changed
 const addButtonListeners = () => {
-  ['betray', 'cooperate'].forEach((id) => {
+  choices = {'betray': 'cooperate', 'cooperate': 'betray'};
+  for(const [id, opid] of Object.entries(choices)){
     const button = document.getElementById(id);
+    console.log("Button ID: " + button.id);
     button.addEventListener('click', () => {
       sock.emit('turn', id);
+      click(button);
+      //Unclick the other button.
+      unclick(document.getElementById(opid));
     });
-  });
+  };
 };
 
-writeEvent('Welcome to RPS');
+
+writeEvent('Welcome to the Game of Betrayal!');
 
 const sock = io();
 
 function create() {
-  console.log("fired");
-  console.log(window.location.search)
+  //console.log("fired");
+  //console.log(window.location.search)
   sock.emit('room', window.location.search);
 }
-
+// Waiting for players
 sock.on('message', writeEvent);
 sock.on('disconnectEvent', (text) => {
   disconnected();
@@ -70,6 +92,6 @@ addButtonListeners();
 
 document
   .querySelector('#id-form')
-  .addEventListener('submit', onIDSubmitted);
+ .addEventListener('submit', onIDSubmitted);
 
 addButtonListeners();

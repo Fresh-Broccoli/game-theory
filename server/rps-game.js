@@ -1,12 +1,12 @@
 
 class RpsGame {
 
-  constructor(p1, p2, n1, n2) {
+  constructor(players) {
     //comment
-    this._names = [n1,n2];
-    this._players = [p1, p2];
-    this._scores = [0, 0];
-    this._turns = [null, null];
+    this._names = players.map(p => p.name);
+    this._players = players.map(p=> p.it);
+    this._scores = Array.apply(null, new Array(players.length)).map(_ =>0);
+    this._turns = Array.apply(null, new Array(players.length)).map(_ => null);
     this._turn = 1;
     this._sendToPlayers('The game of trust begins!');
     this._sendToPlayers('Turn 1: Make your choice');
@@ -29,6 +29,7 @@ class RpsGame {
 
   _onTurn(playerIndex, turn) {
     this._turns[playerIndex] = turn;
+    //this.players[playerIndex].
     this._sendToPlayer(playerIndex, `You choose to ${turn}`);
 
     this._checkGameOver();

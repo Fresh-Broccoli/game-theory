@@ -77,7 +77,8 @@ io.on('connection', (sock) => {
       let index = players.filter(findRoom(room)).length;
       opponent = players.filter(findRoom(room))[index-2].it;
       opponent_name = players.filter(findRoom(room))[index-2].name;
-      new RpsGame(opponent, sock, opponent_name, user);
+      new RpsGame(players);
+      //new RpsGame(opponent, sock, opponent_name, user);
     } else {
       io.to(_id).emit('message', 'Waiting for an opponent ' + user);
     }
