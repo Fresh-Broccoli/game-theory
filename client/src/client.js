@@ -68,6 +68,20 @@ const addButtonListeners = () => {
   };
 };
 
+const createButton = () => {
+  var button = document.createElement("button");
+  button.innerHTML = "Do Something";
+
+// 2. Append somewhere
+  var body = document.getElementsByTagName("body")[0];
+  body.appendChild(button);
+
+// 3. Add event handler
+  button.addEventListener ("click", function() {
+  sock.emit('startGame', "JustDoIt");
+});
+}
+
 
 writeEvent('Welcome to the Game of Betrayal!');
 
@@ -80,6 +94,7 @@ function create() {
 }
 // Waiting for players
 sock.on('message', writeEvent);
+sock.on('first', createButton)
 sock.on('disconnectEvent', (text) => {
   disconnected();
 });

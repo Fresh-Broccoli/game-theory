@@ -16,10 +16,9 @@ const server = http.createServer(app);
 
 const io = socketio(server);
 
-let waitingPlayer = null;
-
 var players = [];
 var rooms = [];
+let first = null;
 
 //To be extended when we want to deal with more than 2 players.
 //var players = [];
@@ -58,6 +57,10 @@ io.on('connection', (sock) => {
   //});
 
   sock.on('room', (text) => {
+    if (players.length === 0){
+      io.to(_id).emit('first', _id)
+    }
+
     room = text.split("/")[0];
     user = text.split("/")[1];
 
@@ -73,16 +76,20 @@ io.on('connection', (sock) => {
     sock.join(room)
     players[getID(_id, players)].room = room;
 
-    if (players.filter(findRoom(room)).length % 2 === 0 && players.filter(findRoom(room)).length !== 0) {
-      let index = players.filter(findRoom(room)).length;
-      opponent = players.filter(findRoom(room))[index-2].it;
-      opponent_name = players.filter(findRoom(room))[index-2].name;
-      new RpsGame(players);
+    //if (players.filter(findRoom(room)).length % 2 === 0 && players.filter(findRoom(room)).length !== 0) {
+      //let index = players.filter(findRoom(room)).length;
+      //opponent = players.filter(findRoom(room))[index-2].it;
+      //opponent_name = players.filter(findRoom(room))[index-2].name;
+      //new RpsGame(players);
       //new RpsGame(opponent, sock, opponent_name, user);
-    } else {
-      io.to(_id).emit('message', 'Waiting for an opponent ' + user);
-    }
-  });
+    //} else {
+      //io.to(_id).emit('message', 'Waiting for an opponent ' + user);
+    //}
+    });
+
+  sock.on('startGame', (text) => {
+    new RpsGame(players);
+  })
 
 });
 
