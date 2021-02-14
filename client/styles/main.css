@@ -29,6 +29,12 @@ button:hover {
     background-color: #79d7e4;
 }
 
+canvas {
+  border: 1px solid black;
+  width: 560px;
+  height: 360px;
+}
+
 button.turn {
   color: rgb(255, 64, 129);
   background-color: white;
