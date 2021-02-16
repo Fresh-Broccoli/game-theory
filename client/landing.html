@@ -1,19 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Register</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Host</title>
+    <link rel="stylesheet" href="styles/mainpage.css">
   </head>
   <body>
     <div class="rps-wrapper">
-      <div class="controls">
-        <div class="chat-wrapper">
-          <form id="chat-form">
-            <input id="name" autocomplete="off" title="name" placeholder="Your Name Here">
-            <button id="enter">Enter</button>
-          </form>
-        </div>
+      <!--Copied from: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_collapsible_animate-->
+      <h2>Game Modes</h2>
+      <button class="collapsible">1 v 1</button>
+      <div class="content">
+        <p>Play against another player!</p>
+        <button id = "1v1" class = "redirect">Go</button>
       </div>
+      <button class="collapsible">Battle Royale</button>
+      <div class="content">
+        <p>Play against many other players!</p>
+        <button id = "br" class = "redirect">Go</button>
+        <script type="text/javascript">
+          document.getElementById("br").onclick = function () {
+            location.href = location.href.replace("landing", "index2");
+          };
+        </script>
+      </div>
+      <button class="collapsible">Bots</button>
+      <div class="content">
+        <p>Play against bots!</p>
+        <button id = "bot" class = "redirect">Go</button>
+      </div>
+
+      <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var i;
+
+      for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var content = this.nextElementSibling;
+          if (content.style.maxHeight){
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+          } 
+        });
+      }
+      </script>
     </div>
 
   </body>

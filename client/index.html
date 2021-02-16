@@ -18,12 +18,14 @@
       <button id="myButton" class="float-left submit-button" >Home</button>
       <script type="text/javascript">
         document.getElementById("myButton").onclick = function () {
-            let data = document.querySelector('#chat1').value;
-            let data2 = document.querySelector('#chat2').value;
-            location.href = "/index2.html?" + data + "/" + data2;
+            let room = document.querySelector('#chat1').value;
+            let name = document.querySelector('#chat2').value;
+            location.href = "/index2.html?" + room + "/" + name;
+            
+
         };
     </script>
     <script src="socket.io/socket.io.js"></script>
-    <script src="src/client.js"></script>
+    
   </body>
 </html>

@@ -2,16 +2,28 @@
 class RpsGame {
 
   constructor(players) {
-
+    // An array of player names.
     this._names = players.map(p => p.name);
+    // An array of player sockets.
     this._players = players.map(p=> p.it);
+    // An array containing pairs of all matches that ensures that all players have
+    // played against one another exactly once.
     this._games = this._combination(this._range(0, this._names.length));
+    // An array of player scores.
     this._scores = Array.apply(null, new Array(players.length)).map(_ =>0);
+    // An array of choices (betray or cooperation) made by each player in a particular
+    // turn. Used to determine their scores along with _games.
     this._turns = Array.apply(null, new Array(players.length)).map(_ => null);
+    
+    // Handling start phase...
     this._turn = 1;
     this._sendToPlayers('The game of trust begins!');
     this._sendToPlayers('Turn 1: Make your choice');
+    
+    // Gotta reset all client buttons.
     this._players.forEach((x) => x.emit('bReset'));
+
+    // Basically, the entire game...
     this._players.forEach((player, idx) => {
       player.on('turn', (turn) => {
         this._onTurn(idx, turn);
@@ -47,7 +59,6 @@ class RpsGame {
 
   _onTurn(playerIndex, turn) {
     this._turns[playerIndex] = turn;
-    //this.players[playerIndex].
     this._sendToPlayer(playerIndex, `You choose to ${turn}`);
 
     this._checkGameOver();
@@ -55,9 +66,6 @@ class RpsGame {
 
   
   _checkGameOver() {
-    
-    const turns = this._turns;
-
     if (this._turns.every((x)=>x)) {
       //this._sendToPlayers('Game over ' + turns.join(' : '));
       
@@ -82,9 +90,6 @@ class RpsGame {
     ones: The number used to determine how much to increase/decrease Player 1's score.
     twos: The number used to determine how much to increase/decrease Player 2's score.
     */
-
-    const AupdatedScore = (one, ones, two, twos) => [this._scores[one]+ones, this._scores[two]+=twos]
-    
     const updatedScore = (one, ones, two, twos) => {
       this._scores[one]+=ones 
       this._scores[two]+=twos
@@ -106,30 +111,30 @@ class RpsGame {
       //console.log(`Player ${t}'s choice: ${p1}`);
       switch (distance) {
         case 0:
-          this._sendToPlayers('Both Players have betrayed each other!');
+          //this._sendToPlayers('Both Players have betrayed each other!');
           updatedScore(o, -1, t, -1);
           break;
-
+          
         case 1:
           if(p0 == 0){
-            this._sendWinMessage(this._players[0], this._players[1])
+            //this._sendWinMessage(this._players[0], this._players[1])
             updatedScore(o, 3, t, -2);
           }  
           else{
-            this._sendWinMessage(this._players[1], this._players[0])
+            //this._sendWinMessage(this._players[1], this._players[0])
             updatedScore(o, -2, t, 3);
           }
           break;
 
         case 2:
-          this._sendToPlayers('Both Players have cooperated!');
+          //this._sendToPlayers('Both Players have cooperated!');
           updatedScore(o, 2, t, 2);
           break;
       }
     }
     this._players.forEach((x) => x.emit('bReset'));
-    console.log(this._scores);
-    console.log(this._games);
+    //console.log(this._scores);
+    //console.log(this._games);
     this._games.forEach((x)=> updateScore(x[0], x[1]));
     this._sendToPlayers('Scores:');
     zip(this._names, this._scores).forEach((x) => this._sendToPlayers(x[0]+ `: ${x[1]}`));

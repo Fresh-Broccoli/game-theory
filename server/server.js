@@ -18,9 +18,9 @@ const io = socketio(server);
 
 var players = [];
 var rooms = [];
-let first = null;
 
-//To be extended when we want to deal with more than 2 players.
+
+//To `b`e extended when we want to deal with more than 2 players.
 //var players = [];
 
 const findRoom = (room) => (a) => {
@@ -41,11 +41,11 @@ const getID = (a, player) => {
 
 
 io.on('connection', (sock) => {
-
   var room = 'Default';
   let opponent = sock;
   const _id = sock.id;
 
+  
   sock.on('disconnect', () => {
     io.to(opponent.id).emit('disconnectEvent', _id);
     players.splice(players.indexOf(_id), 1);
@@ -57,23 +57,24 @@ io.on('connection', (sock) => {
   //});
 
   sock.on('room', (text) => {
-    if (players.length === 0){
-      io.to(_id).emit('first', _id)
-    }
 
     room = text.split("/")[0];
     user = text.split("/")[1];
-
     var connection = {
       room: room,
       constID: sock.id,
       it: sock,
       name: user
     };
+    players.forEach(p => p.it.emit('message', `${user} has joined the room.`));
     players.push(connection);
-    //console.log(players.forEach((a) => a.room))
+    if (players.length === 1){
+      io.to(_id).emit('first', _id);
+    }
+
     sock.leave(players[getID(_id, players)].room);
     sock.join(room)
+    //console.log(players.length);
     players[getID(_id, players)].room = room;
 
     //if (players.filter(findRoom(room)).length % 2 === 0 && players.filter(findRoom(room)).length !== 0) {
@@ -83,11 +84,11 @@ io.on('connection', (sock) => {
       //new RpsGame(players);
       //new RpsGame(opponent, sock, opponent_name, user);
     //} else {
-      //io.to(_id).emit('message', 'Waiting for an opponent ' + user);
+    //io.to(_id).emit('message', 'Waiting for an opponent ' + user);
     //}
     });
 
-  sock.on('startGame', (text) => {
+  sock.on('startGame', (_) => {
     new RpsGame(players);
   })
 
