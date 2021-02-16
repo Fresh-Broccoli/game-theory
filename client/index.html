@@ -18,102 +18,102 @@
 </head>
 
 <body>
-    <canvas id='c' style='position:absolute; left:0px; top:0px;'>
-    </canvas>
+    <style>
+    input:focus {
+        outline: none
+    }
+    input {
+        border-color: #000000 #000000 #3b3b3b #000000;
+    }
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #1a1a1a;
+        opacity: 1; /* Firefox */
+    }
+    </style>
+    <input type="text" id= "name" style="background-color:#000000;color:#3b3b3b;position:absolute;left:100px;top:200px;width:600px;" placeholder="Name"/>
+    <input type="text" id= "name2" style="background-color:#000000;color:#3b3b3b;position:absolute;left:100px;top:300px;width:600px;" placeholder="Room"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.7/pixi.min.js"></script>
     <script>
-    (function() {
-        var
-        // Obtain a reference to the canvas element using its id.
-        htmlCanvas = document.getElementById('c'),
-        // Obtain a graphics context on the canvas element for drawing.
-        context = htmlCanvas.getContext('2d');
+        const app = new PIXI.Application({
+            autoResize: true,
+            resolution: devicePixelRatio,
+            backgroundColor: 0x000000
+        });
+        document.body.appendChild(app.view);
 
-       // Start listening to resize events and draw canvas.
-       initialize();
-
-       function initialize() {
-           // Register an event listener to call the resizeCanvas() function 
-           // each time the window is resized.
-           window.addEventListener('resize', resizeCanvas, false);
-           // Draw canvas border for the first time.
-           resizeCanvas();
+        const buttons_scale = (e) => {
+                scale = e.width/e.height;
+                e.height = (1/3)*app.screen.height;
+                e.width = scale*e.height;
+                console.log(mugshot.width);
+                console.log(mugshot.height);
         }
 
-        // Display custom canvas. In this case it's a blue, 5 pixel 
-        // border that resizes along with the browser window.
-        function redraw() {
-           context.strokeStyle = 'blue';
-           context.lineWidth = '5';
-           context.strokeRect(0, 0, window.innerWidth, window.innerHeight);
+        const title_scale = (e) => {
+                console.log("height")
+                scale = 59/796;
+                e.width = (2/3)*app.screen.width;
+                e.height = scale*e.width;
         }
 
-        // Runs each time the DOM window resize event fires.
-        // Resets the canvas dimensions to match window,
-        // then draws the new borders accordingly.
-        function resizeCanvas() {
-            htmlCanvas.width = window.innerWidth;
-            htmlCanvas.height = window.innerHeight;
-            redraw();
+        const mugshot = new PIXI.Sprite.from('images/mug.png');
+        mugshot.interactive = true;
+        mugshot.on('pointerdown', function() {
+            let data2 = document.getElementById('name').value;
+            let data = document.getElementById('name2').value;
+            location.href = "/index3.html?" + data + "/" + data2;
+        })
+        mugshot.on('mouseout', function() {
+            mugshot.texture = PIXI.Texture.from('images/mug.png')
+        })
+        mugshot.on('mouseover', function() {
+            mugshot.texture = PIXI.Texture.from('images/mug_white.png')
+        })
+        mugshot.anchor.set(0.5,0.5);
+        buttons_scale(mugshot);
+        mugshot.x = (1/3)*mugshot.width;
+        mugshot.y = (1/3)*app.screen.height;
+        app.stage.addChild(mugshot);
+
+        const title = new PIXI.Sprite.from('images/title.png')
+        title.anchor.set(0.5,0.5);
+        title_scale(title);
+        title.x = (1/2)*app.screen.width;
+        title.y = title.height;
+        app.stage.addChild(title);
+
+        scale_factor = 10;
+        
+
+        window.addEventListener('resize', resize);
+
+        function resize() {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+
+            let size = 50;
+            document.getElementById("name").style.left = (1/4)*app.screen.width + "px";
+            document.getElementById("name").style.width = (1/2)*app.screen.width + "px";
+            document.getElementById("name").style.font = `${size}px IBM Plex Sans`;
+            document.getElementById("name").style.top = (1/4)*app.screen.height + "px";
+
+            document.getElementById("name2").style.left = (1/4)*app.screen.width + "px";
+            document.getElementById("name2").style.width = (1/2)*app.screen.width + "px";
+            document.getElementById("name2").style.font = `${size}px IBM Plex Sans`;
+            document.getElementById("name2").style.top = (2/4)*app.screen.height + "px";
+
+            buttons_scale(mugshot);
+            title_scale(title);
+            mugshot.position.set(
+                (1/2)*app.screen.width,
+                app.screen.height - (1/2)*mugshot.height
+            );
+
+            title.position.set(
+                (1/2)*app.screen.width,
+                title.height
+            );
         }
-    })();
-
-    htmlCanvas = document.getElementById('c'),
-    // Obtain a graphics context on the canvas element for drawing.
-    context = htmlCanvas.getContext('2d');
-
-
-    make_base(htmlCanvas, context,'images/prisoner.png');
-    make_base(htmlCanvas, context,'images/noun_on.png')
-    let size = 200;
-    context.font = `${size}px IBM Plex Sans`;
-    while (context.measureText("The Prisoner's Dilemna").width > (2/3)*htmlCanvas.width){
-        size = size - 1;
-        context.font = `${size}px IBM Plex Sans`;
-      }
-    middle = (htmlCanvas.width - context.measureText("The Prisoner's Dilemna").width)/2;
-    context.fillText("The Prisoner's Dilemna", middle, size);
-
-    function make_base(canvas, context, img_path)
-    {
-      base_image = new Image();
-      base_image.src = img_path;
-      base_image.onload = function(){
-        var bike_height = this.naturalHeight;
-        var bike_width = this.naturalWidth;
-        var x = (1/3)*canvas.width;
-        context.drawImage(base_image, 3, 100, x, (bike_height/bike_width)*x);
-    }};
-
-    function getMousePos(canvas, event) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
-    };
-    }
-
-    var rect = {
-    x:0,
-    y:0,
-    width:200,
-    height:100
-    };
-
-    function isInside(pos, rect){
-    return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
-    }
-
-    canvas.addEventListener('click', function(evt) {
-    var mousePos = getMousePos(canvas, evt);
-
-    if (isInside(mousePos,rect)) {
-        alert('clicked inside rect');
-    }else{
-        alert('clicked outside rect');
-    }   
-    }, false);
-
-
+        resize();
     </script>
 </body> 
 </html>

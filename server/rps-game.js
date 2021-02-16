@@ -16,6 +16,10 @@ class RpsGame {
       });
     });
   }
+  _sendPlayerRole() {
+    this._players[0].emit('player', 0);
+    this._players[1].emit('player', 1);
+  }
 
   _sendToPlayer(playerIndex, msg) {
     this._players[playerIndex].emit('message', msg);
@@ -25,6 +29,12 @@ class RpsGame {
     this._players.forEach((player) => {
       player.emit('message', msg);
     });
+  }
+
+  _sendScore(score) {
+    for (let i = 0; i < score.length; i++){
+      this._players[i].emit('score', score)
+    }
   }
 
   _onTurn(playerIndex, turn) {
@@ -86,9 +96,7 @@ class RpsGame {
         this._scores = updatedScore(2,2);
         break;
     }
-    this._sendToPlayers('Scores:');
-    this._sendToPlayers(this._names[0] + `: ${this._scores[0]}`);
-    this._sendToPlayers(this._names[1] + `: ${this._scores[1]}`);
+    this._sendScore(this._scores);
   }
 
   _sendWinMessage(winner, loser) {

@@ -56,6 +56,9 @@ io.on('connection', (sock) => {
     //io.to(sock.id).emit('message', text);
     //io.to(opponent.id).emit('message', text);
   //});
+  sock.on('turn', (text) => {
+    console.log(text);
+  })
 
   sock.on('room', (text) => {
     room = text.split("/")[0];
