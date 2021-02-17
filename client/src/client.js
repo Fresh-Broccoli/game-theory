@@ -1,6 +1,8 @@
 
 
   const sock = io();
+  let rect;
+  let anim;
 
   const app = new PIXI.Application({
       autoResize: true,
@@ -8,6 +10,50 @@
       backgroundColor: 0x000000
   });
   document.body.appendChild(app.view);
+
+  app.loader
+    .add('images/stickman.json')
+    .load(begin);
+
+function begin() {
+  onAssetsLoaded();
+  start();
+}
+
+function onAssetsLoaded() {
+    // create an array of textures from an image path
+    const frames = [];
+
+    for (let i = 0; i < 24; i++) {
+        const val = i < 10 ? `0${i}` : i;
+
+        // magically works since the spritesheet was loaded with the pixi loader
+        frames.push(PIXI.Texture.from(`frame00${val}.png`));
+    }
+
+    // create an AnimatedSprite (brings back memories from the days of Flash, right ?)
+    anim = new PIXI.AnimatedSprite(frames);
+    /*
+     * An AnimatedSprite inherits all the properties of a PIXI sprite
+     * so you can change its position, its anchor, mask it, etc
+     */
+
+    anim.x = app.screen.width / 3;
+    anim.y = app.screen.height / 3;
+    anim.anchor.set(0.5,0.5);
+    anim.animationSpeed = 0.4;
+
+    app.stage.addChild(anim);
+  
+  }
+function start() {
+  anim.interactive = true;
+  anim.on('mousedown', function() {
+    anim.play();
+  });
+  anim.onLoop = function() {
+    anim.stop();
+  }
 
   const buttons_scale = (e) => {
       if (app.screen.width > app.screen.height) {
@@ -111,6 +157,11 @@
         (2/3)*app.screen.width,
         (1/2)*app.screen.height
     );
+
+    anim.position.set(
+      app.screen.width/2,
+      app.screen.height/3
+    )
   }
 
   resize();
@@ -137,9 +188,6 @@ const disconnected = () => {
 
 writeEvent('Welcome to RPS');
 
-function create() {
-  sock.emit('room', window.location.search);
-}
 let player = null;
 
 sock.on('player', (number) => {
@@ -152,3 +200,8 @@ sock.on('message', writeEvent);
 sock.on('disconnectEvent', (text) => {
   disconnected();
 });
+}
+
+function create() {
+  sock.emit('room', window.location.search);
+}

@@ -1,0 +1,111 @@
+{
+  "frames": {
+    "Idle_005.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 338,
+        "h": 372
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 227,
+        "y": 233,
+        "w": 338,
+        "h": 372
+      },
+      "sourceSize": {
+        "w": 797,
+        "h": 625
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Idle_031.png": {
+      "frame": {
+        "x": 0,
+        "y": 372,
+        "w": 334,
+        "h": 372
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 227,
+        "y": 233,
+        "w": 334,
+        "h": 372
+      },
+      "sourceSize": {
+        "w": 797,
+        "h": 625
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Idle_001.png": {
+      "frame": {
+        "x": 0,
+        "y": 744,
+        "w": 338,
+        "h": 371
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 227,
+        "y": 234,
+        "w": 338,
+        "h": 371
+      },
+      "sourceSize": {
+        "w": 797,
+        "h": 625
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "Idle_000.png": {
+      "frame": {
+        "x": 334,
+        "y": 372,
+        "w": 337,
+        "h": 371
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 227,
+        "y": 234,
+        "w": 337,
+        "h": 371
+      },
+      "sourceSize": {
+        "w": 797,
+        "h": 625
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.6",
+    "image": "stickman-1.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 671,
+      "h": 1115
+    },
+    "scale": 1
+  }
+}
