@@ -57,6 +57,43 @@ class RpsGame {
     });
   }
 
+  _updateLeaderboard(playerIndex, pScores) {
+    this._players[playerIndex].emit('updateLB', pScores);
+  };
+
+  _updateLeaderboards(data){
+    //data structure: [[name, score, index], ...]
+    //1. Get the top 3 by sorting
+    //2. For each element in the sorted list:
+    //   3.  If element is in the top 3, emit the top 3 scores.
+    //   4.  Else, emit the append the current element's score and emit.
+
+    // Sorting by sub-elements copied from: https://stackoverflow.com/questions/34599303/javascript-sort-list-of-lists-by-sublist-second-entry
+    const sortedData = data.sort((a,b) => b[0][1] - a[0][1]);
+    // topThree structure: [[name, score], ...]
+    const topThree = sortedData.slice(0,3).map(x=>x[0]);
+    let counter = 0;
+    //console.log("sortedData: ")
+    //console.log(sortedData)
+    //console.log("topThree: ")
+    //console.log(topThree)
+    sortedData.forEach(x=>{
+      if(counter<3){
+        //console.log("Counter < 3:")
+        //console.log(topThree.concat(this._players.length-3).concat([[' ',' ']]))
+        this._updateLeaderboard(x[1], topThree.concat([this._players.length-3, [' ',' ']]));
+        
+      } 
+      else{
+        //console.log("Counter > 3:")
+        //console.log(topThree.concat([counter-3, x[0]]))
+        this._updateLeaderboard(x[1], topThree.concat([counter-3, x[0]]));
+      };
+      counter ++;
+    });
+
+  }
+
   _onTurn(playerIndex, turn) {
     this._turns[playerIndex] = turn;
     this._sendToPlayer(playerIndex, `You choose to ${turn}`);
@@ -114,7 +151,7 @@ class RpsGame {
           //this._sendToPlayers('Both Players have betrayed each other!');
           updatedScore(o, -1, t, -1);
           break;
-          
+
         case 1:
           if(p0 == 0){
             //this._sendWinMessage(this._players[0], this._players[1])
@@ -133,11 +170,10 @@ class RpsGame {
       }
     }
     this._players.forEach((x) => x.emit('bReset'));
-    //console.log(this._scores);
-    //console.log(this._games);
     this._games.forEach((x)=> updateScore(x[0], x[1]));
-    this._sendToPlayers('Scores:');
-    zip(this._names, this._scores).forEach((x) => this._sendToPlayers(x[0]+ `: ${x[1]}`));
+    //this._sendToPlayers('Scores:');
+    //zip(this._names, this._scores).forEach((x) => this._sendToPlayers(x[0]+ `: ${x[1]}`));
+    this._updateLeaderboards(zip(zip(this._names, this._scores), this._range(0,this._players.length)));
     //this._sendToPlayers(this._names[0] + `: ${this._scores[0]}`);
     //this._sendToPlayers(this._names[1] + `: ${this._scores[1]}`);
     }

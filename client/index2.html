@@ -5,24 +5,66 @@
     <link rel="stylesheet" href="styles/main.css">
   </head>
   <body onload="create();">
-    <div class="rps-wrapper">
-      <ul id="events"></ul>
-      <div class="controls">
-        <div class="chat-wrapper">
-          <form id="chat-form">
-          </form>
-        </div>
-        <div class="button-wrapper">
-          <button id="betray" class="turn">Betray</button>
-          <button id="cooperate" class="turn">Cooperate</button>
-        </div>
+    <div class = "container">
+      <div class="rps-wrapper">
+        <ul id="events"></ul>
+        <div class="controls">
+          <div class="chat-wrapper">
+            <form id="chat-form">
+            </form>
+          </div>
+          <div class="button-wrapper">
+            <button id="betray" class="turn">Betray</button>
+            <button id="cooperate" class="turn">Cooperate</button>
+          </div>
+        
+      </div>
+    
+      <button id="myButton" class="float-left submit-button" >Home</button>
+      <script type="text/javascript">
+        document.getElementById("myButton").onclick = function () {
+            location.href = "/index.html?"
+        };
+      </script>
+      
     </div>
-    <button id="myButton" class="float-left submit-button" >Home</button>
-    <script type="text/javascript">
-      document.getElementById("myButton").onclick = function () {
-          location.href = "/index.html?"
-      };
-  </script>
+
+    <!--Leaderboard code copied from https://stackoverflow.com/questions/47918195/creating-a-basic-html-javascript-leaderboard -->
+    <div class = "rps-wrapper">
+      <div style = "text-align: center;height:35px">
+        <b>Leaderboard</b>
+      </div>
+      <div class="row">
+        <div class="name">
+          <b>Name</b>
+        </div>
+        <div class="score">
+          <b>Score</b>
+        </div>
+      </div>
+      <div class="row">
+        <div class="name bold" id="r1n"></div>
+        <div class="score" id="r1s"></div>
+      </div>
+      <div class="row">
+        <div class="name bold" id="r2n"></div>
+        <div class="score" id="r2s"></div>
+      </div>
+      <div class="row">
+        <div class="name bold" id="r3n"></div>
+        <div class="score" id="r3s"></div>
+      </div>
+      <div class="row">
+        <div style="text-align:center;margin:auto;line-height:250%" id="r4n"></div>
+      </div>
+      <div class="row">
+        <div class="name bold" id="r5n"></div>
+        <div class="score" id="r5s"></div>
+      </div>
+      
+    </div>
+
+  </div>
     <script src="socket.io/socket.io.js"></script>
     <script src="src/client.js"></script>
   </body>

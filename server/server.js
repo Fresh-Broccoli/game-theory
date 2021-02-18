@@ -89,7 +89,13 @@ io.on('connection', (sock) => {
     });
 
   sock.on('startGame', (_) => {
-    new RpsGame(players);
+    if(players.length < 3){
+      players[0].it.emit("message", "You need at least 3 players to start!");
+    } else{
+      players[0].it.emit("started", "")
+      new RpsGame(players);
+    }
+
   })
 
 });

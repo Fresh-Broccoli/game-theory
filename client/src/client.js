@@ -73,6 +73,8 @@ const addButtonListeners = () => {
 
 const createButton = () => {
   var button = document.createElement("button");
+  //button.style = "position:absolute;top:70px;";
+  button.className = "float-left submit-button";
   button.innerHTML = "Start!";
 
 // 2. Append somewhere
@@ -81,9 +83,13 @@ const createButton = () => {
 
 // 3. Add event handler
   button.addEventListener ("click", function() {
-  sock.emit('startGame', "JustDoIt");
-  button.disabled = true;
-  button.style.backgroundColor = "red";
+  sock.emit('startGame', "xd");
+  //sock.on("started", (_) => {
+  sock.on("started", (_) => {
+    button.disabled = true;
+    button.style.backgroundColor = "red";
+  })
+  
 });
 }
 
@@ -100,6 +106,23 @@ sock.on('message', writeEvent);
 sock.on('first', createButton);
 sock.on('bReset', resetButtons);
 sock.on('redirect', (dest) => window.location.href = dest);
+sock.on('updateLB', (x) => {
+  for(var i = 1;i<=5;i++){
+    // Name
+    const n = document.getElementById(`r${i}n`);
+    // Score
+    const s = document.getElementById(`r${i}s`);
+
+    if(i===4){
+      
+      n.innerHTML = `${x[i-1]} other player/s ${(x[i][0]=== ' ')?"below":"in-between"}`
+    }   
+    else{
+      n.innerHTML = (i===5 && x[i-1][0] !== ' ')?"You":x[i-1][0];
+      s.innerHTML = x[i-1][1];
+    }
+  }
+})
 sock.on('disconnectEvent', (text) => {
   disconnected();
 });
