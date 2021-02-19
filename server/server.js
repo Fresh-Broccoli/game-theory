@@ -60,6 +60,7 @@ io.on('connection', (sock) => {
 
     room = text.split("/")[0];
     user = text.split("/")[1];
+    sock.emit("name", user);
     var connection = {
       room: room,
       constID: sock.id,
@@ -93,6 +94,7 @@ io.on('connection', (sock) => {
       players[0].it.emit("message", "You need at least 3 players to start!");
     } else{
       players[0].it.emit("started", "")
+      
       new RpsGame(players);
     }
 

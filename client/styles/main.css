@@ -41,6 +41,7 @@ body {
   
   .container {
     position: relative;
+
   }
 
   .rps-wrapper {
@@ -52,8 +53,35 @@ body {
     display: flex;
     flex-direction: column;
     border: 1px solid lightgrey;
+    text-align: center;
   }
   
+  .profileBox{
+    position: relative;
+    width:0px;
+    height:0px;
+  }
+
+  .profile {
+    position:relative;
+    top:0px;
+    left:100%;
+    width:100px;
+    height:300px;
+
+    background:blue;
+    padding:10px;
+
+  }
+
+  .right {
+    position: static; 
+    bottom: 0px;
+    left: 13%;
+    float: right;
+    
+  }
+
   .leaderboard {
     display: grid;
     grid-template-columns: auto auto;

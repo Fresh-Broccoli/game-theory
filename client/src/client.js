@@ -1,6 +1,7 @@
 const bet = document.getElementById('betray');
 const coo = document.getElementById('cooperate');
 const defColor = "white";
+let playerName = null;
 
 const click = (button) => {
   button.style.backgroundColor = 'green';
@@ -103,6 +104,10 @@ function create() {
 }
 // Waiting for players
 sock.on('message', writeEvent);
+sock.on('name', (n)=>{
+  playerName = n;
+  console.log(`Name received: ${n}.`)
+})
 sock.on('first', createButton);
 sock.on('bReset', resetButtons);
 sock.on('redirect', (dest) => window.location.href = dest);
@@ -118,7 +123,8 @@ sock.on('updateLB', (x) => {
       n.innerHTML = `${x[i-1]} other player/s ${(x[i][0]=== ' ')?"below":"in-between"}`
     }   
     else{
-      n.innerHTML = (i===5 && x[i-1][0] !== ' ')?"You":x[i-1][0];
+      console.log(playerName)
+      n.innerHTML = ((i===5 && x[i-1][0] !== ' ') || (i<=3 && playerName == x[i-1][0]))?"You":x[i-1][0];
       s.innerHTML = x[i-1][1];
     }
   }

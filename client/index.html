@@ -5,15 +5,15 @@
     <link rel="stylesheet" href="styles/main.css">
   </head>
   <body>
-    <div class = "rps-wrapper">
+    <div class = "rps-wrapper shorter">
       <div class="chat-wrapper">
         <form id="id-form2">
-          <input id="chat2" autocomplete="off" title="chat2"/>
+          <input id="chat2" autocomplete="off" title="chat2" placeholder="Name"/>
         </form>
       </div>
       <div class="chat-wrapper">
         <form id="id-form">
-          <input id="chat1" autocomplete="off" title="chat1"/>
+          <input id="chat1" autocomplete="off" title="chat1" placeholder="Room ID"/>
         </form>
       </div>
       <button id="myButton" class="float-left submit-button" >Home</button>
@@ -21,8 +21,8 @@
         document.getElementById("myButton").onclick = function () {
             let room = document.querySelector('#chat1').value;
             let name = document.querySelector('#chat2').value;
-            location.href = "/index2.html?" + room + "/" + name;
-            
+            //location.href = "/index2.html?" + room + "/" + name;
+            location.href = "/landing.html?" + room + "/" + name;
 
         };
     </script>
